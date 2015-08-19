@@ -1,0 +1,42 @@
+input_hos_3d_room.txt	input_hos_3d_door.txt	2	4
+1200	650	1000	1	200	110	600	330
+
+input_mall_2-1_room.txt	input_mall_2-1_door.txt	2	4
+1200	650	1000	1	200	110	600	330
+
+
+
+
+
+input_hos_3-8_room.txt	input_hos_3-8_door.txt	2	3
+1200	650	1000	1
+
+	
+
+input_hos_3-8_room.txt	input_hos_3-8_door.txt	2	1
+1200	650	1000	1	
+
+格式：
+输入房间文本	输入门文本	移动对象范围	生成方式
+生成方式：
+1：平面内随机
+x轴范围	y轴范围	数量	层数
+2：平面内二维正态分布
+x轴范围	y轴范围	数量	层数	σ1	σ2	μ1	μ2
+3：房间内随机
+同1
+4：房间内二维正态分布
+同2
+
+input_room1.txt	input_door1.txt	1	1
+600	600	0	1
+input_room1.txt	input_door1.txt	2	1
+600	600	1000	1
+input_room2.txt	input_door2.txt	5	1
+600	600	1000	2
+input_room2.txt	input_door2.txt	5	2
+600	600	1000	2	100	50	250	300
+input_room2.txt	input_door2.txt	5	3
+600	600	500	2
+input_room2.txt	input_door2.txt	5	4
+600	600	1000	2	50	50	250	250
