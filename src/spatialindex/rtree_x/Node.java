@@ -68,8 +68,8 @@ abstract class Node implements INode
 
 	int m_totalDataLength = 0;
 
-	int[] m_frontierDoor = null;//
-	int[][] m_childDoor = null;
+	int[] m_frontierDoor = null;//节点外层门的ID数组
+	int[][] m_childDoor = null;//节点的各个子节点的门ID数组
 	//int doorDataLength = 0;
 	
 	//
@@ -164,7 +164,7 @@ abstract class Node implements INode
 		m_totalDataLength += m_pDataLength[m_children];
 		m_children++;
 
-		//update m_frontierDoor
+		//update m_frontierDoor 在插入时先算出外层门ID数组
 		m_childDoor[m_children] = getDoorID(pData);
 		int[] temp = getDoorArray(m_frontierDoor, m_childDoor[m_children]);
 		m_frontierDoor = temp;
@@ -331,6 +331,8 @@ abstract class Node implements INode
 
 				//r.insertEntry(null, (Region) n.m_nodeMBR.clone(), n.m_identifier);//null?
 				//r.insertEntry(null, (Region) nn.m_nodeMBR.clone(), nn.m_identifier);
+				
+				//插入的时候第一个变量用边界门ID数组取代本来的null
 				r.insertEntry(getpData(n1.m_frontierDoor), (Region) n.m_nodeMBR.clone(), n.m_identifier);
 				r.insertEntry(getpData(nn1.m_frontierDoor), (Region) nn.m_nodeMBR.clone(), nn.m_identifier);
 
@@ -493,6 +495,7 @@ abstract class Node implements INode
 				{
 					if (mask[cChild] == false)
 					{
+						//用门距离远近取代MBR大小作为分group的依据
 						d1 = getDoorsDis(door1, m_childDoor[cChild]);
 						d2 = getDoorsDis(door2, m_childDoor[cChild]);
 //						Region a = mbr1.combinedRegion(m_pMBR[cChild]);
@@ -787,6 +790,8 @@ abstract class Node implements INode
 
 						// find the inefficiency of grouping these entries together.
 				//		double d = r.getArea() - a - m_pMBR[cIndex].getArea();
+						
+						//找出距离最远的两个node的ID
 						double mindis = Double.POSITIVE_INFINITY;
 						for (int j1 = 0; j1 < m_childDoor[cChild].length; j1++) {
 							for (int j2 = 0; j2 < m_childDoor[cIndex].length; j2++) {

@@ -53,6 +53,7 @@ public class Index extends Node
 			case SpatialIndex.RtreeVariantLinear:
 			case SpatialIndex.RtreeVariantQuadratic:
 				//child = findLeastEnlargement(mbr);
+				//用寻找最近节点对的函数取代寻找最小MBR增量的函数
 				child = findNearestNode(pData, mbr);
 				break;
 			case SpatialIndex.RtreeVariantRstar:
@@ -125,6 +126,8 @@ public class Index extends Node
 		//	left.insertEntry(null, m_pMBR[i], m_pIdentifier[i]);
 		//	Node temp = m_pTree.readNode(i);
 		//	left.insertEntry(getpData(temp.m_frontierDoor), m_pMBR[i], m_pIdentifier[i]);
+		
+			//第一个变量用门ID数组取代null
 			left.insertEntry(m_pData[i], m_pMBR[i], m_pIdentifier[i]);
 		}
 
