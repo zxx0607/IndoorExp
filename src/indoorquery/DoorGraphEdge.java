@@ -15,7 +15,7 @@ public class DoorGraphEdge {
 		if(d1.getRoom1() == d2.getRoom1() || d1.getRoom1() == d2.getRoom2())	//find same room id
 			rid = d1.getRoom1();
 		else rid = d1.getRoom2();
-		if(rid != -1){ 	//outdoor
+		if(rid != -1){ 	//!outdoor
 			if(rms[rid].isLift || rms[rid].isStair){	
 				this.length = 2500;		//set floor distance 2.5m
 			}
@@ -23,7 +23,9 @@ public class DoorGraphEdge {
 				this.length = d1.getDoorLoc().distance_2d(d2.getDoorLoc());
 			}
 		}
-		else {this.length = -1; System.out.println("d1: "+d1.getId()+" d2: "+d2.getId()+" rid: "+rid);}
+		else {
+			//this.length = -1; System.out.println("d1: "+d1.getId()+" d2: "+d2.getId()+" rid: "+rid);
+		}	
 	}
 	public double getlength(){
 		return this.length;

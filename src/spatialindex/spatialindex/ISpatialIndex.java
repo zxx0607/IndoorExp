@@ -53,7 +53,10 @@ public interface ISpatialIndex
 //	public Region[] getLeafRegion();
 	public int getLeafNum();
 	public int[] getLeafID();
-	public int[] getLeafChildID(int leafid);
+
 	public Region getNodeRegion(int id);
+	public int getLevel1NodeNum();
+	public int[] getLevel1NodeID();
+	public int[] getChildID(int id);
 } // ISpatialIndex
 

@@ -1153,7 +1153,7 @@ public class RTree implements ISpatialIndex
 		return LeafID;
 	}
 	
-	public int[] getLeafChildID(int leafid){
+	public int[] getChildID(int leafid){
 		Node n = readNode(leafid);
 		int childid[] = new int[n.getChildrenCount()];
 		int i;
@@ -1172,4 +1172,15 @@ public class RTree implements ISpatialIndex
 		// TODO Auto-generated method stub
 		
 	}
+
+	public int getLevel1NodeNum() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int[] getLevel1NodeID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

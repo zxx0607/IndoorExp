@@ -220,7 +220,7 @@ public class RTreeLoad {
 			int ci;
 			for(ci=0; ci<leafID.length; ci++){
 			//	System.out.println(leafID[ci]);
-				int[] childid = tree.getLeafChildID(leafID[ci]);
+				int[] childid = tree.getChildID(leafID[ci]);
 				Region reg = tree.getNodeRegion(leafID[ci]);
 				ls[ci] = new LeafStat(ci, leafID[ci], childid, reg);
 			//	System.out.println(ls[ci].toString());

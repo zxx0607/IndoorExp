@@ -24,6 +24,7 @@ public class RTreeLoad_x {
 	//public int[] childnum;
 	//public double[] px1,px2,py1,py2;
 	public LeafStat[] ls;
+	public LeafStat[] ns;
 	
 	public static void main(String[] args)
 	{	
@@ -84,6 +85,7 @@ public class RTreeLoad_x {
 			double x1, x2, y1, y2, z1, z2;
 			double[] f1 = new double[3];
 			double[] f2 = new double[3];
+			boolean close;
 
 			long start = System.currentTimeMillis();
 			String line = lr.readLine();
@@ -97,7 +99,7 @@ public class RTreeLoad_x {
 //			y1 = new Double(st.nextToken()).doubleValue();
 //			x2 = new Double(st.nextToken()).doubleValue();
 //			y2 = new Double(st.nextToken()).doubleValue();
-			
+				close = true;
 				String[] temps = line.split("\t");
 				op = new Integer(temps[0]).intValue();
 				id = new Integer(temps[1]).intValue();
@@ -113,18 +115,20 @@ public class RTreeLoad_x {
 				ArrayList al = new ArrayList();
 				for(int ali =0; ali<doors.length; ali++)
 				{
-					if(doors[ali].getRoom1() == id || doors[ali].getRoom2() == id)
+					if(doors[ali].getRoom1() == id || doors[ali].getRoom2() == id){
 						al.add(doors[ali]);
-				}
+						close = false;
+					}										
+				}			
 				
 				int[] doorID = new int[al.size()];
 				for (int alj = 0; alj < al.size(); alj++) {
 					doorID[alj] = ((Door)al.get(alj)).getId();
 				}
-////				if (id == 344) {
-////					doorID = new int[1];
-////					doorID[0] = 350;
-////				}
+//				if (id == 344) {
+//					doorID = new int[1];
+//					doorID[0] = 350;
+//				}
 //				if (id == 493) {
 //					doorID = new int[1];
 //					doorID[0] = 490;
@@ -149,7 +153,7 @@ public class RTreeLoad_x {
 //					System.out.println(doorID[ali]);
 //				}
 				
-				//convert doorid array to byte type
+				//convert doorid array to byte type 将门ID的int数组转换为byte数组
 				byte[] pData = new byte[doorID.length*4];
 				
 				for (int alj = 0; alj < doorID.length; alj++) {
@@ -194,7 +198,7 @@ public class RTreeLoad_x {
 						System.exit(-1);
 					}
 				}
-				else if (op == 1)
+				else if (op == 1 && close == false)//将不与其他房间连通的房间舍弃
 				{
 				//insert
 
@@ -256,6 +260,7 @@ public class RTreeLoad_x {
 
 			count++;
 			line = lr.readLine();
+			
 		}
 
 			long end = System.currentTimeMillis();
@@ -282,7 +287,7 @@ public class RTreeLoad_x {
 			
 			
 			
-			
+			//读取叶子节点的roomid和range信息
 			int leafnum = tree.getLeafNum();
 			ls = new LeafStat[leafnum];
 			//System.out.println("leafnum"+leafnum);
@@ -291,7 +296,7 @@ public class RTreeLoad_x {
 			int ci;
 			for(ci=0; ci<leafID.length; ci++){
 			//	System.out.println(leafID[ci]);
-				int[] childid = tree.getLeafChildID(leafID[ci]);
+				int[] childid = tree.getChildID(leafID[ci]);
 				Region reg = tree.getNodeRegion(leafID[ci]);
 				ls[ci] = new LeafStat(ci, leafID[ci], childid, reg);
 			//	System.out.println(ls[ci].toString());
@@ -301,8 +306,32 @@ public class RTreeLoad_x {
 //				}
 			}
 			
-			
-			
+			//读取level1的节点的roomid和range信息
+			int level1nodenum = tree.getLevel1NodeNum();
+			ns = new LeafStat[level1nodenum];
+			int[] level1ID = new int[level1nodenum];
+			level1ID = tree.getLevel1NodeID();
+			for(ci=0; ci<level1ID.length; ci++)
+			{
+				//将1个level1节点中的每个子节点中的roomid数组合并
+				int[] childid = tree.getChildID(level1ID[ci]);
+				ArrayList al = new ArrayList();
+				int arrcount = 0;
+				for(int cj=0; cj<childid.length; cj++){
+					int[] leafroomid = tree.getChildID(childid[cj]);
+					for(int ck=0; ck<leafroomid.length; ck++){
+						al.add(leafroomid[ck]);
+						arrcount++;
+					}
+				}
+				int[] roomid = new int[arrcount];
+				for(int cl = 0; cl<arrcount; cl++){
+					roomid[cl] = (Integer)al.get(cl);
+				}
+				Region reg = tree.getNodeRegion(level1ID[ci]);
+				ns[ci] = new LeafStat(ci, level1ID[ci], roomid, reg);
+			//	System.out.println(ns[ci].toString());
+			}
 			
 		//	int childnum[];
 		//	childnum = tree.getLeafChildrenNum();

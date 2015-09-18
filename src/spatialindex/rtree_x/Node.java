@@ -149,10 +149,10 @@ abstract class Node implements INode
 		m_pMBR = new Region[m_capacity + 1];
 		m_pIdentifier = new int[m_capacity + 1];
 	
-		m_childDoor = new int[m_capacity + 1][];
+		m_childDoor = new int[m_capacity + 1][];//初始化子节点门数组
 	}
 
-	protected void insertEntry(byte[] pData, Region mbr, int id) throws IllegalStateException
+	protected void insertEntry(byte[] pData, Region mbr, int id) throws IllegalStateException//插入入口，用于初始化
 	{
 		if (m_children >= m_capacity) throw new IllegalStateException("m_children >= m_nodeCapacity");
 
@@ -171,7 +171,7 @@ abstract class Node implements INode
 		Region.combinedRegion(m_nodeMBR, mbr);
 	}
 
-	protected void deleteEntry(int index) throws IndexOutOfBoundsException
+	protected void deleteEntry(int index) throws IndexOutOfBoundsException//未使用
 	{
 		if (index < 0 || index >= m_children) throw new IndexOutOfBoundsException("" + index);
 
@@ -214,7 +214,7 @@ abstract class Node implements INode
 
 	protected boolean insertData(byte[] pData, Region mbr, int id, Stack pathBuffer, boolean[] overflowTable)
 	{
-		if (m_children < m_capacity)
+		if (m_children < m_capacity)//正常插入
 		{
 			boolean adjusted = false;
 			boolean b = m_nodeMBR.contains(mbr);
@@ -222,8 +222,8 @@ abstract class Node implements INode
 			insertEntry(pData, mbr, id);
 			m_pTree.writeNode(this);
 
-		//	if (! b && ! pathBuffer.empty())  //??
-			if (! pathBuffer.empty())
+		//	if (! b && ! pathBuffer.empty())  
+			if (! pathBuffer.empty())//当pathBuffer中非空时，说明这在递归中，需要向上调整树的形状
 			{
 				int cParent = ((Integer) pathBuffer.pop()).intValue();
 				Index p = (Index) m_pTree.readNode(cParent);
@@ -311,7 +311,7 @@ abstract class Node implements INode
 
 			return true;
 		}
-		else
+		else //节点分裂
 		{
 			Node[] nodes = split(pData, mbr, id);
 			Node n = nodes[0];
@@ -332,7 +332,7 @@ abstract class Node implements INode
 				//r.insertEntry(null, (Region) n.m_nodeMBR.clone(), n.m_identifier);//null?
 				//r.insertEntry(null, (Region) nn.m_nodeMBR.clone(), nn.m_identifier);
 				
-				//插入的时候第一个变量用边界门ID数组取代本来的null
+				//插入的时候第一个变量用边界门ID数组取代本来的null，其他无改变
 				r.insertEntry(getpData(n1.m_frontierDoor), (Region) n.m_nodeMBR.clone(), n.m_identifier);
 				r.insertEntry(getpData(nn1.m_frontierDoor), (Region) nn.m_nodeMBR.clone(), nn.m_identifier);
 
@@ -359,7 +359,7 @@ abstract class Node implements INode
 		}
 	}
 
-	protected void reinsertData(byte[] pData, Region mbr, int id, ArrayList reinsert, ArrayList keep)
+	protected void reinsertData(byte[] pData, Region mbr, int id, ArrayList reinsert, ArrayList keep)//未使用
 	{
 		ReinsertEntry[] v = new ReinsertEntry[m_capacity + 1];
 
@@ -404,6 +404,7 @@ abstract class Node implements INode
 	}
 
 	protected void rtreeSplit(byte[] pData, Region mbr, int id, ArrayList group1, ArrayList group2)
+	//被index。java和leaf。java中的split方法调用
 	{
 		int cChild;
 		int minimumLoad = (int) Math.floor(m_capacity * m_pTree.m_fillFactor);
@@ -419,6 +420,7 @@ abstract class Node implements INode
 		m_pMBR[m_capacity] = mbr;
 		m_pIdentifier[m_capacity] = id;
 		
+		//初始化子节点的门边界数组 并将pdata数组转换为int数组存入子节点的门边界数组这个二维数组中
 		m_childDoor[m_capacity] = new int[pData.length/4];
 		for (int i = 0; i <m_childDoor[m_capacity].length; i++) {
 			
@@ -445,6 +447,7 @@ abstract class Node implements INode
 		Region mbr1 = (Region) m_pMBR[seeds[0]].clone();
 		Region mbr2 = (Region) m_pMBR[seeds[1]].clone();
 
+		//door1和door2分别是将要分裂的两个子节点的门边界数组
 		int[] door1 = m_childDoor[seeds[0]].clone();
 		int[] door2 = m_childDoor[seeds[1]].clone();
 		// count how many entries are left unchecked (exclude the seeds here.)
@@ -496,7 +499,7 @@ abstract class Node implements INode
 					if (mask[cChild] == false)
 					{
 						//用门距离远近取代MBR大小作为分group的依据
-						d1 = getDoorsDis(door1, m_childDoor[cChild]);
+						d1 = getDoorsDis(door1, m_childDoor[cChild]);//计算门之间距离
 						d2 = getDoorsDis(door2, m_childDoor[cChild]);
 //						Region a = mbr1.combinedRegion(m_pMBR[cChild]);
 //						d1 = a.getArea() - a1;
@@ -557,6 +560,7 @@ abstract class Node implements INode
 				int[] tempdoor;
 				if (group == 1)
 				{
+					//把选中的门加入door1数组
 					tempdoor = getDoorArray(door1, m_childDoor[sel]);
 					door1 = tempdoor;
 				//	Region.combinedRegion(mbr1, m_pMBR[sel]);
@@ -571,7 +575,7 @@ abstract class Node implements INode
 		}
 	}
 
-	protected void rstarSplit(byte[] pData, Region mbr, int id, ArrayList group1, ArrayList group2)
+	protected void rstarSplit(byte[] pData, Region mbr, int id, ArrayList group1, ArrayList group2)//未使用
 	{
 		RstarSplitEntry[] dataLow = new RstarSplitEntry[m_capacity + 1];;
 		RstarSplitEntry[] dataHigh = new RstarSplitEntry[m_capacity + 1];;
@@ -730,7 +734,7 @@ abstract class Node implements INode
 		}
 	}
 
-	protected int[] pickSeeds()
+	protected int[] pickSeeds()//被rtreesplit方法调用，用于找出分裂的两个节点ID
 	{
 		double separation = Double.NEGATIVE_INFINITY;
 		double inefficiency = Double.NEGATIVE_INFINITY;
@@ -830,7 +834,7 @@ abstract class Node implements INode
 		return ret;
 	}
 
-	protected void condenseTree(Stack toReinsert, Stack pathBuffer)
+	protected void condenseTree(Stack toReinsert, Stack pathBuffer)//未使用
 	{
 		int minimumLoad = (int) (Math.floor(m_capacity * m_pTree.m_fillFactor));
 
@@ -898,7 +902,7 @@ abstract class Node implements INode
 		}
 	}
 
-	protected void load(byte[] data) throws IOException
+	protected void load(byte[] data) throws IOException//被rtree。java中的readNode方法调用，用于读取节点信息
 	{
 		m_nodeMBR = (Region) m_pTree.m_infiniteRegion.clone();
 
@@ -1002,7 +1006,7 @@ abstract class Node implements INode
 //		}
 	}
 
-	protected byte[] store() throws IOException
+	protected byte[] store() throws IOException//未改变
 	{
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		DataOutputStream ds = new DataOutputStream(bs);
@@ -1035,7 +1039,7 @@ abstract class Node implements INode
 		return bs.toByteArray();
 	}
 
-	protected int[] getDoorArray(int[] a1, int[] a2){
+	protected int[] getDoorArray(int[] a1, int[] a2){//给定两个doorID数组，返回一个他们的并集
 		
 		if(a1 == null)	return a2;
 		if(a2 == null)	return a1;
@@ -1069,7 +1073,7 @@ abstract class Node implements INode
 		return b;
 	}
 	
-	protected double getDoorsDis(int[] d1, int[] d2){	
+	protected double getDoorsDis(int[] d1, int[] d2){	//给定2个门ID数组，返回他们在最小距离矩阵里的最短距离
 		double dis = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < d1.length; i++) {
 			for (int j = 0; j < d2.length; j++) {
@@ -1084,7 +1088,7 @@ abstract class Node implements INode
 		return dis;
 	}
 	
-	protected byte[] getpData(int[] d){
+	protected byte[] getpData(int[] d){	//int数组转byte数组
 		byte[] pData = new byte[d.length*4];
 		
 		for (int j = 0; j < d.length; j++) {
@@ -1097,7 +1101,7 @@ abstract class Node implements INode
 		return pData;
 	}
 	
-	protected int[] getDoorID(byte[] p){
+	protected int[] getDoorID(byte[] p){	//byte数组转int数组
 		if(p != null){
 			int[] doorid = new int[p.length/4];
 			for (int i = 0; i < doorid.length; i++) {			

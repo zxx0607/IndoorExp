@@ -10,6 +10,7 @@ public class Room {
 	public boolean isStair = false;
 	public boolean isCorridor = false;
 	public boolean isLift = false;
+	//public double area;
 	
 	public Room(int id, Point p1,Point p2,int type){
 		this.id = id;
@@ -58,5 +59,9 @@ public class Room {
 			return true;
 		else
 			return false;
+	}
+	
+	public double getArea(){
+		return (Math.abs(this.p1.x - this.p2.x) * Math.abs(this.p1.y - this.p2.y)/(1000*1000));
 	}
 }

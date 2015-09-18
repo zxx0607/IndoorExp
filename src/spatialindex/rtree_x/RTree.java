@@ -454,7 +454,7 @@ public class RTree implements ISpatialIndex
 				idcount += e.m_pNode.m_children;
 			}
 		}
-System.out.println("nodenum: "+count+" "+idcount);
+		//System.out.println("nodenum: "+count+" "+idcount);
 		int nodes = 0;
 		for (int cLevel = 0; cLevel < m_stats.m_treeHeight; cLevel++)
 		{
@@ -466,7 +466,7 @@ System.out.println("nodenum: "+count+" "+idcount);
 				
 				ret = false;
 			}
-			System.out.println("level: "+cLevel+" i1: "+i1+" i2: "+i2);
+			//System.out.println("level: "+cLevel+" i1: "+i1+" i2: "+i2);
 			nodes += i2;
 		}
 
@@ -1145,7 +1145,7 @@ System.out.println("nodenum: "+count+" "+idcount);
 		return m_stats.getNumberOfNodesInLevel(0);
 	}
 	
-	public int[] getLeafID(){
+	public int[] getLeafID(){//获取一个叶子节点中存放的全部patition的id数组
 		int[] LeafID = new int[m_stats.getNumberOfNodesInLevel(0)];
 		Node n = readNode(m_rootID);
 		int i,j,k;
@@ -1167,8 +1167,8 @@ System.out.println("nodenum: "+count+" "+idcount);
 		return LeafID;
 	}
 	
-	public int[] getLeafChildID(int leafid){
-		Node n = readNode(leafid);
+	public int[] getChildID(int nodeid){//根据一个节点的ID，返回一个包括其全部子节点的ID数组
+		Node n = readNode(nodeid);
 		int childid[] = new int[n.getChildrenCount()];
 		int i;
 		for(i=0; i<n.getChildrenCount(); i++){
@@ -1177,8 +1177,27 @@ System.out.println("nodenum: "+count+" "+idcount);
 		return childid;
 	}
 	
-	public Region getNodeRegion(int id){
+	public Region getNodeRegion(int id){//根据id返回节点的区域
 		Node n = readNode(id);
 		return n.m_nodeMBR;
 	}
+	
+	public int getLevel1NodeNum(){ //层数为1的节点的数目
+		return m_stats.getNumberOfNodesInLevel(1);
+	}
+	
+	public int[] getLevel1NodeID(){ //获取层数为1的节点的id数组
+		int[] NodeID = new int[m_stats.getNumberOfNodesInLevel(1)];
+		Node n = readNode(m_rootID);
+		int i,j,k;
+		k=0;
+		for(i=0;i<n.getChildrenCount();i++)
+		{
+			NodeID[k] = n.getChildIdentifier(i);
+			k++;
+		}
+		return NodeID;
+	}
+
+	
 }

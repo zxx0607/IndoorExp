@@ -56,13 +56,13 @@ public class DoorGraph {
 		double[][] m = this.ShortDisMatrix();
 		
 		
-//		for (int i = 0; i < 5; i++) {
-//			for (int j = 0; j < 5; j++) {
+//		for (int i = 0; i < 60; i++) {
+//			for (int j = 0; j < 60; j++) {
 //				System.out.print(m[i][j]+"\t");
 //			}
 //			System.out.println();
 //		}
-//		
+		
 		
 		return m;
 	}

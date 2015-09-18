@@ -30,15 +30,41 @@ public class Exp {
 			o_range = Integer.parseInt(str1[2]);
 			
 			DoorGraph dgraph = new DoorGraph(doors, rooms);
+			
+			
+			
 			double[][] matrix = dgraph.GetShortMatrix();
-			for (int i = 0; i < 50; i++) {
-				for (int j = 0; j < 50; j++) {
-					System.out.print(matrix[i][j]+"\t");
-				}
-				System.out.println();
+			
+			double area = 0;
+			for (int i = 0; i < rooms.length; i++) {
+				area = area + rooms[i].getArea();
 			}
+			System.out.println("total area:"+area);
 			
+			double np = rooms.length;
+			double nd2 = doors.length;			
+			double ndp = 2*nd2/np;
+			System.out.println("ndp:"+ndp);
+			double pa = area/np;
+			System.out.println("pa:"+pa);
+			double r = Math.sqrt(pa/Math.PI);
+			System.out.println("r:"+r);
+			double sita = 2*Math.PI/ndp;
+			System.out.println("sita:"+sita);
+			double dpr = (4*r*Math.sin(sita/4)*Math.sin(sita*ndp/4)*Math.sin((sita-sita*ndp)/r))/(ndp*(Math.cos(sita/2)-1));
+			System.out.println("dpr:"+dpr);
 			
+			double totalDtoD = 0;
+			for (int i = 0; i < matrix.length; i++) {
+				for (int j = 0; j < matrix[i].length; j++) {
+					if(matrix[i][j] >0)
+						totalDtoD = totalDtoD + matrix[i][j]/1000;
+				}
+			}
+			System.out.println("totalDtoD:"+totalDtoD);
+			double dpr2;
+			dpr2 = totalDtoD/(doors.length * (doors.length-1));
+			System.out.println("ave_DtoD_dis:"+dpr2);
 //			switch(Integer.parseInt(str1[3])){
 //			case 1:
 //				dg = new DataGenerator(Integer.parseInt(str2[0]),Integer.parseInt(str2[1]),Integer.parseInt(str2[2]),Integer.parseInt(str2[3]));
@@ -60,16 +86,60 @@ public class Exp {
 			//RTreeLoad rtl = new RTreeLoad("input_mall_2-1_data.txt","tree",20,"10NN");
 		//	RTreeLoad rtl = new RTreeLoad("input_hos_3d_data2.txt","tree",20,"10NN");
 			RTreeLoad_x rtl_x = new RTreeLoad_x("input_hos_3d_data2.txt","tree",20,"10NN",matrix,doors);
-//			int leafnum = rtl.ls.length;
-//			LeafStat[] ls = new LeafStat[leafnum];
-//			for(int i=0; i<leafnum; i++)
-//			{
-//				ls[i] = rtl.ls[i];
-//			//	System.out.println(ls[i].toString());
-//				ls[i].avedis(rooms, doors);
-//				System.out.println(ls[i].toString());
-//			}
 			
+			System.out.println("\nLevel0 Pages' Result:");
+			
+			int leafnum = rtl_x.ls.length;
+			LeafStat[] ls = new LeafStat[leafnum];
+			int roomcount = 0;
+			for(int i=0; i<leafnum; i++)
+			{
+				ls[i] = rtl_x.ls[i];
+			
+				ls[i].avedis(rooms, doors,matrix);
+				System.out.println(ls[i].toString());
+				roomcount += ls[i].roomnum;
+				double np_l = ls[i].roomnum;
+				double nd2_l = ls[i].doornum;
+				double ndp_l = 2*nd2_l/np_l;
+				
+				double pa_l = ls[i].area/np_l;
+				
+				double r_l = Math.sqrt(pa_l/Math.PI);
+		
+				double sita_l = 2*Math.PI/ndp_l;
+				
+				double dpr_l = (4*r_l*Math.sin(sita_l/4)*Math.sin(sita_l*ndp_l/4)*Math.sin((sita_l-sita_l*ndp_l)/r_l))/(ndp_l*(Math.cos(sita_l/2)-1));
+				System.out.println("dpr:"+dpr_l);
+			}
+			
+			System.out.println("\n\nLevel1 Pages' Result:");
+			
+			int indexnum = rtl_x.ns.length;
+			LeafStat[] ns = new LeafStat[indexnum];
+			int roomcount2 = 0;
+			for (int i = 0; i < indexnum; i++) {
+				ns[i] = rtl_x.ns[i];
+				ns[i].avedis(rooms, doors, matrix);
+				
+				System.out.println(ls[i].toString());
+				
+				roomcount2 += ns[i].roomnum;
+			
+				double np_l = ns[i].roomnum;
+				double nd2_l = ns[i].doornum;
+				double ndp_l = 2*nd2_l/np_l;
+				
+				double pa_l = ns[i].area/np_l;
+				
+				double r_l = Math.sqrt(pa_l/Math.PI);
+		
+				double sita_l = 2*Math.PI/ndp_l;
+				
+				double dpr_l = (4*r_l*Math.sin(sita_l/4)*Math.sin(sita_l*ndp_l/4)*Math.sin((sita_l-sita_l*ndp_l)/r_l))/(ndp_l*(Math.cos(sita_l/2)-1));
+				
+				System.out.println("dpr:"+dpr_l);
+			}
 			
 //			Point[] p1 = new Point[rtl.childnum.length];
 //			Point[] p2 = new Point[rtl.childnum.length];

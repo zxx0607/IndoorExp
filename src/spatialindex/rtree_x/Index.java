@@ -40,7 +40,7 @@ public class Index extends Node
 		super(pTree, id, level, pTree.m_indexCapacity);
 	}
 
-	protected Node chooseSubtree(Region mbr, int level, Stack pathBuffer, byte[] pData)
+	protected Node chooseSubtree(Region mbr, int level, Stack pathBuffer, byte[] pData)//用于在插入新节点时寻找应该被插入到的已有节点
 	{
 		if (m_level == level) return this;
 
@@ -96,7 +96,7 @@ public class Index extends Node
 		return null;
 	}
 
-	protected Node[] split(byte[] pData, Region mbr, int id)
+	protected Node[] split(byte[] pData, Region mbr, int id)	//node。java中insertData方法中被调用，返回分裂后的两个节点
 	{
 		m_pTree.m_stats.m_splits++;
 
@@ -146,7 +146,7 @@ public class Index extends Node
 		return ret;
 	}
 
-	protected int findLeastEnlargement(Region r)
+	protected int findLeastEnlargement(Region r)//计算MBR的最小增量，被下面的函数取代
 	{
 		double area = Double.POSITIVE_INFINITY;
 		int best = -1;
@@ -172,10 +172,10 @@ public class Index extends Node
 		return best;
 	}
 	
-	protected int findNearestNode(byte[] pData, Region r){  //
+	protected int findNearestNode(byte[] pData, Region r){  //寻找离插入的节点最近的节点
 		
 		int best;
-		//convert byte[] to int[]
+		//convert byte[] to int[] 将pdata里存储的门ID信息转换为int数组doorid
 		if(pData != null){
 			//System.out.println(pData);
 			int[] doorid = new int[pData.length/4];
@@ -193,7 +193,7 @@ public class Index extends Node
 			double distance = Double.POSITIVE_INFINITY;		
 			best = -1;
 		
-			//find nearest child
+			//find nearest child 寻找最近的节点
 			for (int cChild = 0; cChild < m_children; cChild++)
 			{
 				//	Node tempn = m_pTree.readNode(m_pIdentifier[cChild]);
@@ -220,7 +220,7 @@ public class Index extends Node
 	
 	
 
-	protected int findLeastOverlap(Region r)
+	protected int findLeastOverlap(Region r)//r星树专用，并未改变
 	{
 		OverlapEntry[] entries = new OverlapEntry[m_children];
 
@@ -339,14 +339,12 @@ public class Index extends Node
 				}
 			}
 		}
-		//writenode?
+		//将每个孩子的门ID数组与当前节点的边界数组合并
 		for (int i = 0; i < m_children; i++) {
 			int[] temp1 = getDoorID(m_pData[i]);
 			int[] temp2 = m_frontierDoor;
 			m_frontierDoor = getDoorArray(temp1, temp2);
 		}
-		
-		
 		
 		
 		m_pTree.writeNode(this);
@@ -359,7 +357,7 @@ public class Index extends Node
 		}
 	}
 
-	protected void adjustTree(Node n1, Node n2, Stack pathBuffer, boolean[] overflowTable)
+	protected void adjustTree(Node n1, Node n2, Stack pathBuffer, boolean[] overflowTable)//用于节点分裂后重新计算MBR，没有改动
 	{
 		m_pTree.m_stats.m_adjustments++;
 
