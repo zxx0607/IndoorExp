@@ -177,7 +177,7 @@ public class RTree implements ISpatialIndex
 				System.arraycopy(data, 0, buffer, 0, data.length);
 			}
 			
-
+			//System.out.println(id);
 			insertData_impl(buffer, mbr, id);
 				// the buffer is stored in the tree. Do not delete here.
 		}

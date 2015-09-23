@@ -6,8 +6,8 @@ import spatialindex.spatialindex.Region;
 
 public class LeafStat {//存储R树一个节点内的信息
 	
-	private int[] roomid;
-	private int leafid;
+	public int[] roomid;
+	public int leafid;
 	private int leafid_rtree;
 	private Region reg;
 	
@@ -132,7 +132,7 @@ public class LeafStat {//存储R树一个节点内的信息
 	
 	public String toString(){
 	//	String str = "Region: "+p1.x+" "+p1.y+" "+p2.x+" "+p2.y+"\n"+"roomnum:"+this.roomnum+"\n"+"doornum: "+this.doornum+"\n"+"ave_door_dis: "+this.ave_door_dis+"\n";
-		String str ="\nleafid: "+leafid+"\nroomnum: "+roomnum+"\ndoornum: "+doornum;
+		String str ="\nnodeid: "+leafid+"\nroomnum: "+roomnum+"\ndoornum: "+doornum;
 		str += "\nave_door_dis: "+this.ave_door_dis; 
 		return str;
 	}

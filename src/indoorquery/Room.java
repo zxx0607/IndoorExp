@@ -1,6 +1,7 @@
 package indoorquery;
 
 import java.lang.management.ThreadInfo;
+import java.util.ArrayList;
 
 public class Room {
 //	private double x1,y1,x2,y2;
@@ -10,6 +11,8 @@ public class Room {
 	public boolean isStair = false;
 	public boolean isCorridor = false;
 	public boolean isLift = false;
+	public double dpr = 0;
+	public double avedis = 0;
 	//public double area;
 	
 	public Room(int id, Point p1,Point p2,int type){
@@ -63,5 +66,63 @@ public class Room {
 	
 	public double getArea(){
 		return (Math.abs(this.p1.x - this.p2.x) * Math.abs(this.p1.y - this.p2.y)/(1000*1000));
+	}
+	
+	public int doornum(Door[] d){
+		int count = 0;
+		for (int i = 0; i < d.length; i++) {
+			if(d[i].getRoom1() == this.id || d[i].getRoom2() == this.id)
+				count++;
+		}
+		return count;
+	}
+	
+	public int[] getDoorID(Door[] d){
+		ArrayList al = new ArrayList();
+		for (int i = 0; i < d.length; i++) {
+			if(d[i].getRoom1() == this.id || d[i].getRoom2() == this.id){
+				al.add(i);
+			}
+		}
+		if(al.size() == 0 || al.size() == 1){return null;}
+		else{
+			int[] dr = new int[al.size()];
+			for (int i = 0; i < al.size(); i++) {
+				dr[i] = (Integer)al.get(i);
+			}
+			return dr;
+		}
+		
+	}
+	
+	
+	public double aveDisInRoom(Door[] d){
+		ArrayList al = new ArrayList();
+		for (int i = 0; i < d.length; i++) {
+			if(d[i].getRoom1() == this.id || d[i].getRoom2() == this.id){
+				al.add(d[i]);
+			}
+		}
+		if(al.size() == 0 || al.size() == 1){return 0;}
+		else{
+			Door[] dr = new Door[al.size()];
+			for (int i = 0; i < al.size(); i++) {
+				dr[i] = (Door)al.get(i);
+			}
+			double sum = 0;
+			for (int i = 0; i < dr.length-1; i++) {
+				for (int j = i+1; j < dr.length; j++) {
+					if(dr[i].getFloor() != dr[j].getFloor()){
+						sum += 2500;
+					}
+					else{
+						sum += dr[i].getDoorLoc().distance_2d(dr[j].getDoorLoc());
+					}
+				}
+			}
+			this.avedis = sum/(dr.length*1000);
+			return this.avedis;
+		}
+		
 	}
 }

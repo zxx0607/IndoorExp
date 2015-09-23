@@ -80,7 +80,7 @@ public class Point {
 	}
 	
 	public boolean inRoom(Room r){
-		if(this.x >= r.getLUPoint().x && this.x <= r.getRDPoint().x && this.y >=r.getLUPoint().y && this.y <= r.getRDPoint().y){
+		if(this.x >= r.getLUPoint().x && this.x <= r.getRDPoint().x && this.y >=r.getLUPoint().y && this.y <= r.getRDPoint().y && this.z == r.getFloor()){
 			return true;
 		}else{
 			return false;

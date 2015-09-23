@@ -6,6 +6,9 @@ public class Door {
 	private int floor;
 	//private Room a,b;
 	private int room_id1,room_id2;
+	public boolean flag = false;
+	public int[] nbdoor;
+	public double[] nbdis[];
 //	public Door(int id,Point p, Room a, Room b){
 //		this.id = id;
 //		this.p = new Point(p);

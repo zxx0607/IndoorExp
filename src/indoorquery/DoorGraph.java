@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class DoorGraph {
 	//double MAX_NUM = 1024*1024*1024;
 	private Door[] ds;
-	private DoorGraphEdge[] dges;
+	public DoorGraphEdge[] dges;
 	public double ave_dis;
 	public double[][] matrix;
 	
@@ -56,8 +56,8 @@ public class DoorGraph {
 		double[][] m = this.ShortDisMatrix();
 		
 		
-//		for (int i = 0; i < 60; i++) {
-//			for (int j = 0; j < 60; j++) {
+//		for (int i = 60; i < 70; i++) {
+//			for (int j = 235; j < 245; j++) {
 //				System.out.print(m[i][j]+"\t");
 //			}
 //			System.out.println();

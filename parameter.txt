@@ -1,6 +1,11 @@
 input_hos_3d_room.txt	input_hos_3d_door.txt	2	4
 1200	650	1000	1	200	110	600	330
 
+mall_room.txt	mall_door.txt	2	4
+1200	650	1000	1	200	110	600	330
+
+
+
 input_mall_2-1_room.txt	input_mall_2-1_door.txt	2	4
 1200	650	1000	1	200	110	600	330
 

@@ -2,7 +2,7 @@ package indoorquery;
 
 public class DoorGraphEdge {
 	public Door d1,d2;
-	private double length;
+	public double length;
 	public DoorGraphEdge(Door d1, Door d2){
 		this.d1 = d1;
 		this.d2 = d2;
